@@ -135,15 +135,33 @@ def get_quadrants(limits):
     return quadrants
 
 
-def mandel_single(max_iter, res, limits):
+def mandel_single(max_iter, res, limits, name='man'):
+    """
+    Creates a single mandelbrot set picture with the given parameters
+    
+    Arguments:
+    max_iter: Maximum amount of iterations to perform to generate image
+    res: Resolution of image in pixels
+    limits: x / y limits for generating image"""
+
     t0 = time()
     man = manelbrot(max_iter, res, limits)
     t1 = time()
     print('Done! Took %.2f seconds.' % (t1-t0))
-    pyplot.imsave('man.png', man)
+    pyplot.imsave('{}.png'.format(name), man)
 
 
-def mandel_multi(max_iter, res, limits, base_name='mandel'):
+def mandel_multi(max_iter, res, limits, base_name='mandel'):]
+    """
+    Creates a 2x2 grid of mandelbrot set pictures
+    
+    Arguments:
+    max_iter: Maximum amount of iterations to perform to generate image
+    res: Resolution of image in pixels, this resolution is applied to each section of the grid,
+        giving the combined picture a resolution of twice the res
+    limits: x / y limits for generating image of the combined image
+    base_name: base name of files generated"""
+
     quadrants = get_quadrants(limits)
     for key, quadrant in enumerate(quadrants):
         t0 = time()
@@ -153,7 +171,20 @@ def mandel_multi(max_iter, res, limits, base_name='mandel'):
         pyplot.imsave('%s_%i.png' % (base_name, key+1), man)
 
 
-def julia_single(c, func, max_iter, res, limits, raw=False):
+def julia_single(c, func, max_iter, res, limits, raw=False, name='julia'):
+    """
+    Creates a single julia set picture with the given parameters
+    
+    Arguments:
+    c: a constant complex number for which to base julia set ones
+    func: function for which to iterate over
+    max_iter: Maximum amount of iterations to perform to generate image
+    res: Resolution of image in pixels
+    limits: x / y limits for generating image
+    raw: bool: False: use optimized calculation routines, may fail for more compicated functions
+               True: Use basic calculation routines, slower but will work for almost any function
+    name: name of file to generate"""
+
     t0 = time()
     if raw:
         man = julia_raw(complex(*c), func, max_iter, res, limits)
@@ -165,10 +196,21 @@ def julia_single(c, func, max_iter, res, limits, raw=False):
             man = julia_raw(complex(*c), func, max_iter, res, limits)
     t1 = time()
     print('Done! Took %.2f seconds.' % (t1-t0))
-    pyplot.imsave('man.png', man)
+    pyplot.imsave('{}.png'.format(name), man)
 
 
 def julia_multi(c, func, max_iter, res, limits, raw=False, base_name='julia'):
+    """
+    Creates a 2x2 grid of Julia set pictures
+    
+    Arguments:
+    c: a constant complex number for which to base julia set ones
+    func: function for which to iterate over
+    max_iter: Maximum amount of iterations to perform to generate image
+    res: Resolution of image in pixels, this resolution is applied to each section of the grid,
+        giving the combined picture a resolution of twice the res
+    limits: x / y limits for generating image of the combined image
+    base_name: base name of files generated"""
     quadrants = get_quadrants(limits)
     for key, quadrant in enumerate(quadrants):
         t0 = time()
@@ -208,25 +250,10 @@ def expand_function(func):
     return result
 
 
-def create_interval(center, distance):
+def create_interval(center, radius):
     x = center[0]
     y = -center[1]
 
-    return [[y - distance, y + distance], [x - distance, x + distance]]
-# man = mandel_array(5000, 500, limits)
-# limits = ((-1.5, 1.5), (-2.0, 1))
-# limits = create_interval([-0.1011, 0.9563], 0.1)
-limits = create_interval([0,0], 1.5)
+    return [[y - radius, y + radius], [x - radius, x + radius]]
 
-# julia_single((-0, 0.0), 
-#               'z**2 + c',
-#               100, 1000, limits, raw=False)
-mandel_single(100, 1000, limits)
 
-# t0 = time()
-# man = mandel_array(100, 1000, limits)
-# # man = julia_set(, lambda z, c: z**2 + c, 300, 5000, limits)
-# t1 = time()
-# print('Done! Took %.2f seconds.' % (t1-t0))
-# pyplot.imsave('man.png', man)
-# # pyplot.imshow(man)
