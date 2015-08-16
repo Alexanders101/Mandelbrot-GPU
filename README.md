@@ -5,7 +5,7 @@ This python scirpt will generate a mandelbrot or julia fractal image with a give
 
 Requires:
 
-* nunmpy
+* numpy
 * theano
 * sympy
 * numexpr
